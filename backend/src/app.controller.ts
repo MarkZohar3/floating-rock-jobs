@@ -1,6 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { JobDto } from './DTOs/job.dto';
 
+@ApiTags('jobs')
+@Controller('jobs')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -11,14 +15,13 @@ export class AppController {
   }
 
   @Get('jobs')
-  getJobs() {
-    return {
-      jobs: [
-        { title: 'Fullstack Developer', company: 'Spotify' },
-        { title: 'Frontend Engineer', company: 'Airbnb' },
-        { title: 'Backend Engineer', company: 'Stripe' },
-        { title: 'DevOps Engineer', company: 'Netflix' },
-      ],
-    };
+  @ApiOkResponse({ description: 'List jobs', type: JobDto, isArray: true })
+  getJobs(): JobDto[] {
+    return [
+      { title: 'Fullstack Developer', company: 'Spotify' },
+      { title: 'Frontend Engineer', company: 'Airbnb' },
+      { title: 'Backend Engineer', company: 'Stripe' },
+      { title: 'DevOps Engineer', company: 'Netflix' },
+    ];
   }
 }

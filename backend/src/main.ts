@@ -9,11 +9,14 @@ async function bootstrap() {
     .setTitle('My API')
     .setDescription('API documentation')
     .setVersion('1.0')
+    .addServer(`http://localhost:${process.env.PORT ?? 3001}`)
     // .addBearerAuth() // enable if you use JWT auth
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('api', app, document, {
+    jsonDocumentUrl: 'openapi.json',
+  });
 
   await app.listen(process.env.PORT ?? 3001);
 }
