@@ -9,4 +9,16 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('jobs')
+  getJobs() {
+    return {
+      jobs: [
+        { title: 'Fullstack Developer', company: 'Spotify' },
+        { title: 'Frontend Engineer', company: 'Airbnb' },
+        { title: 'Backend Engineer', company: 'Stripe' },
+        { title: 'DevOps Engineer', company: 'Netflix' },
+      ],
+    };
+  }
 }
