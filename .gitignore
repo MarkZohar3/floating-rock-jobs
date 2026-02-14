@@ -37,3 +37,17 @@ temp/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Python scraper (local env, caches, test artifacts)
+scraper/.venv/
+scraper/venv/
+scraper/env/
+scraper/__pycache__/
+scraper/.pytest_cache/
+scraper/.mypy_cache/
+scraper/.ruff_cache/
+scraper/.coverage
+scraper/htmlcov/
+scraper/.env
+scraper/.env.*
+scraper/*.py[cod]
