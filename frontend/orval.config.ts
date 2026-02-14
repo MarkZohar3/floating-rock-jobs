@@ -10,6 +10,7 @@ export default defineConfig({
       target: './src/generated/client.ts',
       schemas: './src/generated/model',
       client: 'fetch',
+      baseUrl: process.env.API_URL ?? 'http://localhost:3001',
       clean: true,
     },
   },
