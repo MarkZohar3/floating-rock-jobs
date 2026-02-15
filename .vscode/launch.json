@@ -1,0 +1,42 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Frontend: Dev",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/frontend"
+    },
+    {
+      "name": "Backend: Dev",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run start:dev",
+      "cwd": "${workspaceFolder}/backend"
+    },
+    {
+      "name": "Scraper: Run",
+      "type": "python",
+      "request": "launch",
+      "python": "${workspaceFolder}/scraper/.venv/bin/python",
+      "program": "${workspaceFolder}/scraper/test_selenium.py",
+      "cwd": "${workspaceFolder}/scraper",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Run All: Frontend + Backend + Scraper",
+      "configurations": [
+        "Frontend: Dev",
+        "Backend: Dev",
+        "Scraper: Run"
+      ]
+    }
+  ]
+}

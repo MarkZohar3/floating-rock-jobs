@@ -33,7 +33,10 @@ temp/
 .eslintcache
 
 # IDE / OS
-.vscode/
+.vscode/*
+!.vscode/
+!.vscode/launch.json
+!.vscode/tasks.json
 .idea/
 .DS_Store
 Thumbs.db
