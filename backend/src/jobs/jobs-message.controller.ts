@@ -1,4 +1,12 @@
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import {
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { Controller, Logger } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 

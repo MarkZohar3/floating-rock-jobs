@@ -9,7 +9,7 @@ from infra.publisher import publish_message
 BASE_URL = "https://api.smartrecruiters.com/v1"
 COMPANY = "Endava"
 POSTING_ID = "744000087625095"
-CACHE_FILE = Path(__file__).with_name("smartrecruiters_endava_postings.json")
+CACHE_FILE = Path(__file__).parent / "backups" / "smartrecruiters_endava_postings.json"
 
 def get_single_posting(company, posting_id):
     url = f"{BASE_URL}/companies/{company}/postings/{posting_id}"

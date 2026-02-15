@@ -53,6 +53,8 @@ scraper/htmlcov/
 scraper/.env
 scraper/.env.*
 scraper/*.py[cod]
+scraper/backups/
 
 __pycache__/
 *.pyc
+
