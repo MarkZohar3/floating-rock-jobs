@@ -2,11 +2,25 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Frontend: Dev",
+      "name": "Frontend: Dev Server",
       "type": "node-terminal",
       "request": "launch",
       "command": "npm run dev",
       "cwd": "${workspaceFolder}/frontend"
+    },
+    {
+      "name": "Frontend: Debug Full Stack",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/frontend",
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "webRoot": "${workspaceFolder}/frontend",
+        "killOnServerStop": true
+      }
     },
     {
       "name": "Backend: Dev",
@@ -33,7 +47,7 @@
     {
       "name": "Run All: Frontend + Backend + Scraper",
       "configurations": [
-        "Frontend: Dev",
+        "Frontend: Dev Server",
         "Backend: Dev",
         "Scraper: Run"
       ]
