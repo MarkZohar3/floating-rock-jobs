@@ -1,14 +1,23 @@
+import os
 import requests
 import hashlib
 import sys
 import traceback
 import json
 from pathlib import Path
+import pika
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_URL = "https://api.smartrecruiters.com/v1"
 COMPANY = "Endava"
 POSTING_ID = "744000087625095"
 CACHE_FILE = Path(__file__).with_name("smartrecruiters_endava_postings.json")
+USER = os.environ["RABBITMQ_USER"]
+PASSWORD = os.environ["RABBITMQ_PASS"]
+HOST = os.environ.get("RABBITMQ_HOST", "localhost")
+PORT = int(os.environ.get("RABBITMQ_PORT", 5672))
 
 
 def get_single_posting(company, posting_id):
@@ -77,7 +86,35 @@ try:
     for p in postings.get("content", []):
         print("-", p.get("name"), "|", p.get("id"))
 
-    print("\nDone.")
+    print("\nDone with printing, moving to queue.")
+
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(
+            host='localhost',
+            port=5672,
+            credentials=pika.PlainCredentials(USER, PASSWORD)
+        )
+    )
+    channel = connection.channel()
+
+    channel.queue_declare(queue='jobs', durable=True)
+
+    job_data = {
+        "title": "Backend Developer",
+        "company": "Endava",
+        "location": "Slovenia"
+    }
+  
+    channel.basic_publish(
+        exchange='',
+        routing_key='jobs',
+        body=json.dumps(job_data),
+        properties=pika.BasicProperties(delivery_mode=2)
+    )
+
+    print("Job sent to queue")
+
+    connection.close()
 
 except Exception:
     traceback.print_exc()

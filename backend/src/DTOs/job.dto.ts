@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class JobDto {
   @ApiProperty({ example: 'Fullstack Developer' })
@@ -6,4 +6,7 @@ export class JobDto {
 
   @ApiProperty({ example: 'Spotify' })
   company: string;
+
+  @ApiPropertyOptional({ example: 'Ljubljana' })
+  location?: string;
 }

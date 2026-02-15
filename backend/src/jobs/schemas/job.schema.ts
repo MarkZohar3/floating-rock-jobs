@@ -10,6 +10,9 @@ export class Job {
 
   @Prop({ required: true, trim: true })
   company: string;
+
+  @Prop({ trim: true })
+  location?: string;
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);
