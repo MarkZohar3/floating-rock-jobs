@@ -1,8 +1,8 @@
-# FriendshipCountdown
+# Floating Rock Jobs
 
 Just getting started. 
 
-This is an app that will allow you to input list of friends and then have a countdown reminder of who you haven't contacted more than a desired period (you can set default or custom time per person). 
+This app will scrape and list jobs. Project will be dedicated to a person, who inspired me with their strength and gave me motivation to become better.
 
 
 ## Tech Stack
