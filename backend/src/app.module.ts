@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Job, JobSchema } from './jobs/schemas/job.schema';
 import { JobsService } from './jobs/jobs.service';
+import { JobsMessageController } from './jobs/jobs-message.controller';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { JobsService } from './jobs/jobs.service';
     ),
     MongooseModule.forFeature([{ name: Job.name, schema: JobSchema }]),
   ],
-  controllers: [AppController],
+  controllers: [AppController, JobsMessageController],
   providers: [AppService, JobsService],
 })
 export class AppModule {}
