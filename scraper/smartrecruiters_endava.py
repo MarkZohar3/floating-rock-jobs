@@ -1,24 +1,15 @@
-import os
 import requests
 import hashlib
 import sys
 import traceback
 import json
 from pathlib import Path
-import pika
-from dotenv import load_dotenv
-
-load_dotenv()
+from infra.publisher import publish_message
 
 BASE_URL = "https://api.smartrecruiters.com/v1"
 COMPANY = "Endava"
 POSTING_ID = "744000087625095"
 CACHE_FILE = Path(__file__).with_name("smartrecruiters_endava_postings.json")
-USER = os.environ["RABBITMQ_USER"]
-PASSWORD = os.environ["RABBITMQ_PASS"]
-HOST = os.environ.get("RABBITMQ_HOST", "localhost")
-PORT = int(os.environ.get("RABBITMQ_PORT", 5672))
-
 
 def get_single_posting(company, posting_id):
     url = f"{BASE_URL}/companies/{company}/postings/{posting_id}"
@@ -65,8 +56,18 @@ def load_or_fetch_postings(company, cache_file, limit=20, offset=0):
 try:
     print("Script started\n", flush=True)
 
-    # 1️⃣ Fetch specific job
-    job = get_single_posting(COMPANY, POSTING_ID)
+    # 1️⃣ Load postings from JSON cache, or fetch and cache if missing
+    postings = load_or_fetch_postings(COMPANY, CACHE_FILE, limit=10)
+
+    # 2️⃣ Fetch specific job; fall back to cached posting when offline
+    try:
+        job = get_single_posting(COMPANY, POSTING_ID)
+    except requests.RequestException as exc:
+        print(f"A) Failed to fetch single posting, using cached data: {exc}", flush=True)
+        content = postings.get("content", [])
+        if not content:
+            raise
+        job = content[0]
 
     print("\nSingle Posting:")
     print("Title:", job.get("name"))
@@ -77,9 +78,6 @@ try:
     description_text = str(description)
     print("Content hash:", hash_content(description_text))
 
-    # 2️⃣ Load postings from JSON cache, or fetch and cache if missing
-    postings = load_or_fetch_postings(COMPANY, CACHE_FILE, limit=10)
-
     print("\nTotal Found:", postings.get("totalFound"))
     print("Returned:", len(postings.get("content", [])))
 
@@ -88,33 +86,18 @@ try:
 
     print("\nDone with printing, moving to queue.")
 
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(
-            host='localhost',
-            port=5672,
-            credentials=pika.PlainCredentials(USER, PASSWORD)
-        )
-    )
-    channel = connection.channel()
-
-    channel.queue_declare(queue='jobs', durable=True)
-
     job_data = {
         "title": "Backend Developer",
         "company": "Endava",
         "location": "Slovenia"
     }
-  
-    channel.basic_publish(
-        exchange='',
-        routing_key='jobs',
-        body=json.dumps(job_data),
-        properties=pika.BasicProperties(delivery_mode=2)
-    )
 
-    print("Job sent to queue")
-
-    connection.close()
+    try:
+        publish_message("jobs", job_data)
+        print("Job sent to queue")
+    except Exception as exc:
+        print(f"Queue publish failed: {exc}", flush=True)
+        print("Continuing without publishing.", flush=True)
 
 except Exception:
     traceback.print_exc()

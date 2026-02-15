@@ -19,6 +19,10 @@ export class JobsMessageController {
     try {
       await this.jobsService.createFromQueueMessage(payload);
       channel.ack(message);
+      this.logger.log({
+        event: 'jobs_message_processed',
+        payload,
+      });
       return { stored: true };
     } catch (error) {
       channel.nack(message, false, false);
