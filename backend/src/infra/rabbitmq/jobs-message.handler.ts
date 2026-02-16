@@ -8,11 +8,11 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { Controller, Logger } from '@nestjs/common';
-import { JobsService } from './jobs.service';
+import { JobsService } from '../../domain/jobs/jobs.service';
 
 @Controller()
-export class JobsMessageController {
-  private readonly logger = new Logger(JobsMessageController.name);
+export class JobsMessageHandler {
+  private readonly logger = new Logger(JobsMessageHandler.name);
 
   constructor(private readonly jobsService: JobsService) {}
 

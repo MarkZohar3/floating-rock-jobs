@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { JobDto } from './DTOs/job.dto';
-import { JobsService } from './jobs/jobs.service';
+import { JobsService } from './domain/jobs/jobs.service';
 
 @ApiTags('jobs')
 @Controller()

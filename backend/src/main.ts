@@ -1,25 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { JobsMessageDeserializer } from './jobs/jobs-message.deserializer';
+import { createRabbitMqMicroserviceConfig } from './infra/rabbitmq/rabbitmq.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const url = process.env.RABBITMQ_URL ?? 'amqp://localhost:5672';
   console.log('RMQ URL USED:', url);
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.RMQ,
-    options: {
-      urls: [process.env.RABBITMQ_URL ?? 'amqp://localhost:5672'],
-      queue: process.env.RABBITMQ_QUEUE ?? 'jobs',
-      queueOptions: {
-        durable: true,
-      },
-      noAck: false,
-      deserializer: new JobsMessageDeserializer(),
-    },
-  });
+  app.connectMicroservice(createRabbitMqMicroserviceConfig());
 
   const config = new DocumentBuilder()
     .setTitle('My API')
